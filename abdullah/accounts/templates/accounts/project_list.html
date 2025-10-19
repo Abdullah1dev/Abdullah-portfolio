@@ -82,89 +82,48 @@
 
     .project-title {
       font-size: 1.3rem;
+      margin: 0;
+      color: #007bff;
       font-weight: 600;
-      color: #333;
-      margin-bottom: 0.5rem;
     }
 
     .project-description {
-      font-size: 0.95rem;
       color: #555;
-      margin-bottom: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
     }
 
-    /* 🔗 Buttons */
-    .btn {
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      margin-right: 0.5rem;
-      transition: background 0.3s;
-    }
-
-    .btn.demo {
-      background-color: #00b4d8;
-    }
-
-    .btn.demo:hover {
-      background-color: #0077b6;
-    }
-
-    .btn.github {
-      background-color: #333;
-    }
-
-    .btn.github:hover {
-      background-color: #111;
-    }
-
-    .actions {
-      margin-top: 1rem;
-    }
-
-    .edit {
-      color: #28a745;
-      text-decoration: none;
-      font-weight: 500;
-      margin-right: 1rem;
-    }
-
-    .delete {
-      color: #dc3545;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .no-projects {
+    /* 📄 Pagination */
+    .pagination {
       text-align: center;
-      font-size: 1.1rem;
-      margin-top: 3rem;
+      padding: 1.5rem;
     }
 
-    /* 📱 Responsive Design */
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.5rem;
-      }
+    .pagination a, .pagination span {
+      display: inline-block;
+      padding: 8px 12px;
+      margin: 0 4px;
+      border-radius: 6px;
+      text-decoration: none;
+      border: 1px solid #ddd;
+      color: #007bff;
+      transition: all 0.3s ease;
+    }
 
-      .add-btn {
-        position: static;
-        display: inline-block;
-        margin-top: 1rem;
-        transform: none;
-      }
+    .pagination a:hover {
+      background-color: #007bff;
+      color: white;
+    }
 
-      .projects-container {
-        grid-template-columns: 1fr;
-        padding: 1rem;
-      }
+    .pagination .current {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
 
-      .project-card {
-        margin: 0;
-      }
+    .pagination .disabled {
+      color: #ccc;
+      border-color: #eee;
     }
   </style>
 </head>
@@ -172,41 +131,46 @@
 <body>
   <header>
     <h1>All Projects</h1>
-    <a href="{% url 'create_project' %}" class="add-btn">+ Add New Project</a>
+    <a href="{% url 'create_project' %}" class="add-btn">+ Add New</a>
   </header>
 
-  <main class="projects-container">
-    {% for project in projects %}
+  <section class="projects-container">
+    {% for project in page_obj %}
       <div class="project-card">
         {% if project.image %}
           <img src="{{ project.image.url }}" alt="{{ project.title }}" class="project-image">
         {% endif %}
-
         <div class="project-content">
           <h2 class="project-title">{{ project.title }}</h2>
-          <p class="project-description">{{ project.description }}</p>
-
-          <div class="links">
-            {% if project.demo_link %}
-              <a href="{{ project.demo_link }}" class="btn demo" target="_blank">Demo</a>
-            {% endif %}
-            {% if project.github_link %}
-              <a href="{{ project.github_link }}" class="btn github" target="_blank">GitHub</a>
-            {% endif %}
-          </div>
-
-          <div class="actions">
-            <a href="{% url 'update_project' project.id %}" class="edit">Edit</a>
-            <a href="{% url 'delete_project' project.id %}" class="delete">Delete</a>
-          </div>
+          <p class="project-description">{{ project.description|truncatewords:25 }}</p>
         </div>
       </div>
     {% empty %}
-      <p class="no-projects">No projects yet. <a href="{% url 'create_project' %}">Create one</a></p>
+      <p>No projects found.</p>
     {% endfor %}
-  </main>
+  </section>
+
+  <!-- 📄 Pagination Controls -->
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}">« Prev</a>
+    {% else %}
+      <span class="disabled">« Prev</span>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <span class="current">{{ num }}</span>
+      {% else %}
+        <a href="?page={{ num }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">Next »</a>
+    {% else %}
+      <span class="disabled">Next »</span>
+    {% endif %}
+  </div>
 </body>
 </html>
-
-
-

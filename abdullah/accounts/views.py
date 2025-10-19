@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, ProjectForm 
 from .forms import Project
+from django.core.paginator import Paginator
 
 def register(request):
     if request.method == "POST":
@@ -50,7 +51,17 @@ def create_project(request):
 
 def project_list(request):
     projects = Project.objects.all().order_by('-created')
-    return render(request, 'accounts/project_list.html', {'projects': projects})
+    per_page=2
+    paginator=Paginator(projects,per_page)
+    
+    page_number=request.GET.get('page')
+    page_obj=paginator.get_page(page_number)
+    context={
+        'projects':projects,
+        'page_obj':page_obj,
+        'paginator':paginator
+    }
+    return render(request, 'accounts/project_list.html',context)
 
 def delete_project(request,pk):
     project=get_object_or_404(Project,pk=pk)
