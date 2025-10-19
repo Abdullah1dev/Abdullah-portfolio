@@ -58,7 +58,7 @@ def delete_project(request,pk):
         project.delete()
         return redirect('project_list')
     
-    return redirect(request,'accounts/project_confirm_delete.html',{'project':project})
+    return render(request,'accounts/project_confirm_delete.html',{'project':project})
 
 def update_project(request, pk):
     project = get_object_or_404(Project, pk=pk)
