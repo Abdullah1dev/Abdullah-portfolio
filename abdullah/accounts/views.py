@@ -41,7 +41,7 @@ def create_project(request):
             project.owner = request.user
             project.save()
             form.save_m2m()
-            return redirect('project_list')  # ✅ fixed here
+            return redirect('project_list')  
     else:
         form = ProjectForm()
     return render(request, 'accounts/project_form.html', {'form': form})
@@ -51,6 +51,26 @@ def create_project(request):
 
 def project_list(request):
     projects = Project.objects.all().order_by('-created')
+    #apply filters for search through title
+    search_query=request.GET.get('search',' ')
+    if search_query:
+        projects=projects.filter(title__icontains=search_query)
+    
+    #now for tags filters
+    tag_filter=request.GET.get('tag',' ')
+    if tag_filter:
+        projects=projects.filter(tags__name__icontains=tag_filter)
+        
+    #now filter by published status
+    published_filter=request.GET.get('published',' ')
+    if published_filter == 'true':
+        projects=projects.filter(published=True)
+    
+    elif published_filter == 'false':
+        projects=projects.filter(published=False)
+    
+    #this is here we applied pagination
+    
     per_page=2
     paginator=Paginator(projects,per_page)
     
@@ -58,7 +78,7 @@ def project_list(request):
     page_obj=paginator.get_page(page_number)
     context={
         'projects':projects,
-        'page_obj':page_obj,
+        'page_obj':page_obj, 
         'paginator':paginator
     }
     return render(request, 'accounts/project_list.html',context)
