@@ -20,7 +20,7 @@ class Project(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
-    image = models.ImageField(upload_to='projects/', default='default.jpg', blank=True)
+    image = models.ImageField(upload_to='projects/',blank=True,null=True)
     tags = models.ManyToManyField(Tag, blank=True)
     demo_link = models.URLField(blank=True, null=True)
     github_link = models.URLField(blank=True, null=True)
