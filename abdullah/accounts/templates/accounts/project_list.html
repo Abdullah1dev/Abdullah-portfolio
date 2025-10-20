@@ -120,6 +120,60 @@
       font-size: 0.95rem;
     }
 
+    /* 🔘 Action Buttons */
+    .project-actions {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .project-actions a {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-update {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-update:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background-color: #a71d2a;
+    }
+
+    .btn-demo {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .btn-demo:hover {
+      background-color: #1e7e34;
+    }
+
+    .btn-github {
+      background-color: #24292e;
+      color: white;
+    }
+
+    .btn-github:hover {
+      background-color: #000;
+    }
+
     /* 📄 Pagination */
     .pagination {
       text-align: center;
@@ -184,6 +238,19 @@
         <div class="project-content">
           <h2 class="project-title">{{ project.title }}</h2>
           <p class="project-description">{{ project.description|truncatewords:25 }}</p>
+
+          <!-- 🔘 Action Buttons -->
+          <div class="project-actions">
+            <a href="{% url 'update_project' project.id %}" class="btn-update">✏️ Update</a>
+            <a href="{% url 'delete_project' project.id %}" class="btn-delete">🗑 Delete</a>
+
+            {% if project.demo_link %}
+              <a href="{{ project.demo_link }}" target="_blank" class="btn-demo">🌐 Demo</a>
+            {% endif %}
+            {% if project.github_link %}
+              <a href="{{ project.github_link }}" target="_blank" class="btn-github">💻 GitHub</a>
+            {% endif %}
+          </div>
         </div>
       </div>
     {% empty %}

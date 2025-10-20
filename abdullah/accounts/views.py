@@ -52,17 +52,17 @@ def create_project(request):
 def project_list(request):
     projects = Project.objects.all().order_by('-created')
     #apply filters for search through title
-    search_query=request.GET.get('search',' ')
+    search_query=request.GET.get('search','')
     if search_query:
         projects=projects.filter(title__icontains=search_query)
     
     #now for tags filters
-    tag_filter=request.GET.get('tag',' ')
+    tag_filter=request.GET.get('tag','')
     if tag_filter:
         projects=projects.filter(tags__name__icontains=tag_filter)
         
     #now filter by published status
-    published_filter=request.GET.get('published',' ')
+    published_filter=request.GET.get('published','')
     if published_filter == 'true':
         projects=projects.filter(published=True)
     
