@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Project, Tag
+from .models import CustomUser, Project, Tag,ProjectImage
 
 
 @admin.register(CustomUser)
@@ -23,7 +23,16 @@ class ProjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}  
     ordering = ('-updated_at',)
 
-     
+
+class ProjectImageInline(admin.TabularInline):
+    model=ProjectImage
+    extra=1
+    fields=('image','caption')
+    
+admin.site.register(ProjectImage)
+
+
+
 
 
 
