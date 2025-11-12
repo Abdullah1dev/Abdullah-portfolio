@@ -69,7 +69,7 @@ def project_list(request):
     elif published_filter == 'false':
         projects=projects.filter(published=False)
     
-    #this is here we applied pagination
+   
     
     per_page=2
     paginator=Paginator(projects,per_page)
@@ -104,9 +104,10 @@ def update_project(request, pk):
 
     return render(request, 'accounts/project_form.html', {'form': form})
 
-    
-    
 
+def project_detail(request,slug):
+    project=get_object_or_404(Project , slug=slug)
+    return render(request,'accounts/project_detail.html',{'project':project})
 
 def home(request):
     return render(request, 'accounts/home.html')
